@@ -1,0 +1,349 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Gestión de Usuarios</title>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <link rel="stylesheet" th:href="@{/css/style.css}"> 
+
+</head>
+
+<body>
+
+	<div th:replace="~{fragmentos/header :: navbar(${usuarioLogueado})}"></div>
+
+    <div class="main-content-wrapper">
+		<main class="container">
+			<div class="row justify-content-center mb-5">
+				<div class="col-md-8">
+					<div class="card p-4">
+						<h1 class="mb-4 text-dark fw-bold text-center"><i class="fas fa-user-plus me-3"></i>CREAR USUARIO</h1>
+						<div th:if="${#lists.isEmpty(lstTrabajadores)}" class="alert alert-warning mt-2 text-center">
+							No hay trabajadores disponibles para crear un nuevo usuario.
+						</div>
+						<form action="/usuarios/guardarUsuario" method="post" th:object="${usuarios}" class="row g-3">
+
+							<div class="col-lg-12">
+								<label class="form-label">Trabajador</label>
+								<select class="form-select" th:field="*{id_trabajador}"
+									th:disabled="${#lists.isEmpty(lstTrabajadores)}" required>
+									<option value="">Seleccione...</option>
+									<option th:each="t : ${lstTrabajadores}" th:value="${t.id_trabajador}"
+										th:text="${t.nombres + ' ' + t.apellidos}"></option>
+								</select>
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label">Rol del usuario:</label>
+								<select class="form-select" th:field="*{id_rol}"
+									th:disabled="${#lists.isEmpty(lstTrabajadores)}" required>
+									<option value="">Seleccione...</option>
+									<option th:each="r : ${lstRol}" th:value="${r.id_rol}" th:text="${r.descripcion}">
+									</option>
+								</select>
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label">Nombre usuario:</label>
+								<input th:field="*{username}" type="text" class="form-control" placeholder="Cree Usuario"
+									th:disabled="${#lists.isEmpty(lstTrabajadores)}" required>
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label">Contraseña:</label>
+								<div class="input-group">
+									<input th:field="*{contrasenia}" type="password" id="contrasenia" class="form-control"
+										placeholder="Cree Contraseña" th:disabled="${#lists.isEmpty(lstTrabajadores)}"
+										required>
+									<button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+										<i class="fas fa-eye" id="icono-ojo"></i>
+									</button>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label">Confirmar Contraseña:</label>
+								<div class="input-group">
+									<input type="password" id="confirmarContrasenia" class="form-control"
+										placeholder="Repita Contraseña" th:disabled="${#lists.isEmpty(lstTrabajadores)}"
+										required>
+									<button type="button" class="btn btn-outline-secondary"
+										onclick="toggleConfirmPassword()">
+										<i class="fas fa-eye" id="icono-ojo-confirmar"></i>
+									</button>
+								</div>
+							</div>
+
+
+							<div class="col-12">
+								<label class="form-label">Estado</label>
+								<input type="hidden" name="estado" value="true" />
+								<select class="form-select" disabled>
+									<option value="true" selected>Activo</option>
+								</select>
+							</div>
+							<div class="col-12 d-grid mt-3">
+								<button type="submit" class="btn btn-primary btn-lg">Crear Usuario</button>
+							</div>
+
+							<div class="col-12 d-grid mt-3">
+								<a href="/usuarios/cargarMenu" class="btn btn-secondary btn-lg">Regresar al
+									Menú</a>
+							</div>
+						</form>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="row justify-content-center mb-5">
+				<div class="col-md-12">
+					<div class="card p-4">
+						<h3 class="text-dark fw-bold mb-3 text-start"><i class="fas fa-users-cog me-3"></i>Listado de Usuarios</h3>
+						<div class="table-responsive">
+							<table class="table table-hover align-middle text-center">
+								<thead>
+									<tr>
+										<th>Nombre de Usuario</th>
+										<th>Contraseña</th>
+										<th>Nombres y Apellidos</th>
+										<th>DNI</th>
+										<th>Area</th>
+										<th>Cargo</th>
+										<th>Rol</th>
+										<th>Estado</th>
+										<th>Acciones</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="u : ${lstUsuario}" th:classappend="${u.estado != null and !u.estado} ? 'table-danger'">
+										<td th:text="${u.username}"></td>
+										<td th:text="${u.contrasenia}"></td>
+										<td
+											th:text="${u.objTrabajador != null ? u.objTrabajador.nombres + ' ' + u.objTrabajador.apellidos : 'Sin datos'}">
+										</td>
+										<td th:text="${u.objTrabajador != null ? u.objTrabajador.numero_documento : '---'}">
+										</td>
+										<td th:text="${u.objTrabajador != null ? u.objTrabajador.area : '---'}"></td>
+										<td th:text="${u.objTrabajador != null ? u.objTrabajador.cargo : '---'}"></td>
+
+										<td th:text="${u.objRol != null ? u.objRol.descripcion : '---'}"></td>
+
+										<td>
+										  <span class="badge" th:text="${u.estado} ? 'Activo' : 'Inactivo'"
+												th:classappend="${u.estado} ? 'bg-success' : 'bg-danger'"></span>
+										</td>
+										<td>
+											<div class="d-flex justify-content-center gap-2">
+
+												<a class="btn btn-sm btn-outline-primary" th:attr="data-id=${u.id_usuario}"
+													onclick="abrirModalEditar(this)">Editar</a>
+
+												<a class="btn btn-sm btn-outline-danger" th:attr="data-id=${u.id_usuario}"
+													onclick="abrirModalEliminar(this)">Eliminar</a>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<footer>
+            <div>&copy; 2025 Sistema de Gestión | Todos los derechos reservados</div>
+        </footer>
+	</div>
+
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+			crossorigin="anonymous"></script>
+
+	<script>
+		function togglePassword() {
+			const input = document.getElementById("contrasenia");
+			const icono = document.getElementById("icono-ojo");
+
+			if (input.type === "password") {
+				input.type = "text";
+				icono.classList.remove("fas", "fa-eye");
+				icono.classList.add("fas", "fa-eye-slash");
+			} else {
+				input.type = "password";
+				icono.classList.remove("fas", "fa-eye-slash");
+				icono.classList.add("fas", "fa-eye");
+			}
+		}
+
+		function toggleConfirmPassword() {
+			const input = document.getElementById("confirmarContrasenia");
+			const icono = document.getElementById("icono-ojo-confirmar");
+
+			if (input.type === "password") {
+				input.type = "text";
+				icono.classList.remove("fas", "fa-eye");
+				icono.classList.add("fas", "fa-eye-slash");
+			} else {
+				input.type = "password";
+				icono.classList.remove("fas", "fa-eye-slash");
+				icono.classList.add("fas", "fa-eye");
+			}
+		}
+
+		document.querySelector("form").addEventListener("submit", function (e) {
+			const pass = document.getElementById("contrasenia").value;
+			const confirm = document.getElementById("confirmarContrasenia").value;
+
+			if (pass !== confirm) {
+				e.preventDefault();
+				Swal.fire({
+					icon: 'warning',
+					title: '¡Atención!',
+					text: 'Las contraseñas no coinciden.',
+					background: '#f0f9ff',
+					color: '#333',
+					confirmButtonColor: '#ffc107',
+					confirmButtonText: 'Entendido',
+				});
+			}
+		});
+
+		function cargarDatosCliente(elemento) {
+			const idCliente = elemento.getAttribute("data-id");
+
+			fetch(`/clientes/cargar/${idCliente}`)
+				.then(response => response.json())
+				.then(data => {
+					document.querySelector('#campoNombre').value = data.nombre;
+					document.querySelector('#campoApellido').value = data.apellido;
+					const modal = new bootstrap.Modal(document.getElementById('modalEditarCliente'));
+					modal.show();
+				});
+		}
+
+	</script>
+
+	<script>
+		function abrirModalEditar(elemento) {
+			const idUsuario = elemento.getAttribute("data-id");
+
+			fetch(`/usuarios/cargar/${idUsuario}`)
+				.then(res => res.json())
+				.then(data => {
+					document.getElementById("edit_id_usuario").value = data.id_usuario;
+					document.getElementById("edit_id_trabajador").value = data.id_trabajador;
+					document.getElementById("edit_id_rol").value = data.id_rol;
+
+					document.getElementById("edit_username").value = data.username;
+					document.getElementById("edit_contrasenia").value = data.contrasenia;
+					document.getElementById("edit_estado_visual").value = data.estado;
+					document.getElementById("hidden_estado").value = data.estado;
+
+					
+					const estadoVisual = document.getElementById("edit_estado_visual");
+					if (data.estado === false) {
+						estadoVisual.disabled = false;
+					} else {
+						estadoVisual.disabled = true;
+					}
+					
+					
+					const modal = new bootstrap.Modal(document.getElementById("modalEditarUsuario"));
+					modal.show();
+				})
+				.catch(err => Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'Error al cargar usuario: ' + err,
+					background: '#f0f9ff',
+					color: '#333',
+					confirmButtonColor: '#dc3545',
+				}));
+				
+		}
+
+		function abrirModalEliminar(elemento) {
+			const idUsuario = elemento.getAttribute("data-id");
+
+			fetch(`/usuarios/cargar/${idUsuario}`)
+				.then(res => res.json())
+				.then(data => {
+					document.getElementById("del_id_usuario").value = data.id_usuario;
+					document.getElementById("del_id_trabajador").value = data.id_trabajador;
+					document.getElementById("del_id_rol").value = data.id_rol;
+					document.getElementById("del_username").value = data.username;
+					document.getElementById("del_contrasenia").value = data.contrasenia;
+					document.getElementById("del_estado").value = data.estado;
+
+					const modal = new bootstrap.Modal(document.getElementById("modalEliminarUsuario"));
+					modal.show();
+				})
+				.catch(err => Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'Error al cargar usuario para eliminar: ' + err,
+					background: '#f0f9ff',
+					color: '#333',
+					confirmButtonColor: '#dc3545',
+				}));
+		}
+
+	</script>
+	
+	
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const estadoVisual = document.getElementById("edit_estado_visual");
+			if (estadoVisual) {
+				estadoVisual.addEventListener("change", function () {
+					document.getElementById("hidden_estado").value = this.value;
+				});
+			}
+		});
+	</script>
+
+
+
+	<script th:inline="javascript" th:if="${mensaje != null}">
+		Swal.fire({
+			icon: 'success',
+			title: '¡Éxito!',
+			text: '[[${mensaje}]]',
+			background: '#f0f9ff',
+			color: '#333',
+			confirmButtonColor: '#4f46e5',
+			confirmButtonText: '¡Entendido!',
+			showClass: {
+				popup: 'animate__animated animate__fadeInDown'
+			},
+			hideClass: {
+				popup: 'animate__animated animate__fadeOutUp'
+			},
+			timer: 3500,
+			timerProgressBar: true,
+			allowOutsideClick: false,
+		});
+	</script>
+	
+
+	<div th:replace="~{modelUsuario/modelEditar :: modalEditarUsuario}"></div>
+
+	<div th:replace="~{modelUsuario/modelEliminar :: modalEliminarUsuario}"></div>
+
+
+</body>
+
+</html>

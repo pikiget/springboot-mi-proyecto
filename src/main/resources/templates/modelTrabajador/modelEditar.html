@@ -1,0 +1,93 @@
+<!-- templates/modelTrabajador/modalEditar.html -->
+<div th:fragment="modalEditarTrabajador">
+  <div class="modal fade" id="modalEditarTrabajador" tabindex="-1" aria-labelledby="modalEditarTrabajadorLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title fw-bold">✏️ Editar Trabajador</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+		
+		<form id="formEditarTrabajador" method="post" action="/trabajadores/actualizar" th:object="${trabajadores}">
+			<div class="modal-body">
+			   <!-- Campo oculto para ID -->
+			   <input type="hidden" th:field="*{id_trabajador}" id="edit_id_trabajador" />
+
+			   <div class="row g-3">
+			     <div class="col-md-6">
+			       <label class="form-label">Nombres</label>
+				   <input type="text" name="nombres" id="edit_nombres" class="form-control" required />
+			     </div>
+
+			     <div class="col-md-6">
+			       <label class="form-label">Apellidos</label>
+			       <input type="text" th:field="*{apellidos}" id="edit_apellidos" class="form-control" required />
+			     </div>
+
+			     <div class="col-md-6">
+			       <label class="form-label">Fecha de nacimiento</label>
+			       <input type="date" th:field="*{fecha_nacimiento}" id="edit_fecha_nacimiento" class="form-control" required />
+			     </div>
+
+			     <div class="col-md-6">
+			       <label class="form-label">Número de documento</label>
+			       <input type="text" th:field="*{numero_documento}" id="edit_numero_documento" class="form-control" required />
+			     </div>
+
+			     <div class="col-md-6">
+			       <label class="form-label">Teléfono</label>
+			       <input type="tel" th:field="*{telefono}" id="edit_telefono" class="form-control" required />
+			     </div>
+
+			     <div class="col-md-6">
+			       <label class="form-label">Correo electrónico</label>
+			       <input type="email" th:field="*{correo_electronico}" id="edit_correo_electronico" class="form-control" required />
+			     </div>
+
+			     <div class="col-md-6">
+			       <label class="form-label">Cargo</label>
+			       <input type="text" th:field="*{cargo}" id="edit_cargo" class="form-control" required />
+			     </div>
+
+			     <div class="col-md-6">
+			       <label class="form-label">Área</label>
+			       <input type="text" th:field="*{area}" id="edit_area" class="form-control" required />
+			     </div>
+
+			     <div class="col-md-12">
+			       <label class="form-label">Horario</label>
+			       <select th:field="*{id_horario}" id="edit_id_horario" class="form-select" required>
+			         <option value="">Seleccione...</option>
+			         <option th:each="h : ${lstHora}" th:value="${h.id_horario}" th:text="${h.descripcion}"></option>
+			       </select>
+			     </div>
+
+				 <!-- Estado -->
+				 <div class="col-12">
+				 	<label class="form-label">Estado</label>
+
+				 	<!-- Campo oculto que sí se envía -->
+				 	<input type="hidden" name="estado" id="hidden_estado_trabajador">
+
+				 	<!-- Select que el usuario ve pero está deshabilitado -->
+				 	<select class="form-select" id="edit_estado_trabajador_visual" disabled>
+				 		<option value="">Seleccione...</option>
+				 		<option value="true">Activo</option>
+				 		<option value="false">Eliminado</option>
+				 	</select>
+				 </div>
+				 
+			   </div>
+			 </div>
+
+			 <div class="modal-footer">
+			   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+			   <button type="submit" class="btn btn-primary">Actualizar</button>
+			 </div>
+		
+		</form>
+		
+      </div>
+    </div>
+  </div>
+</div>

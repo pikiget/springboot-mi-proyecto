@@ -1,0 +1,91 @@
+<!-- templates/modelUsuario/modalEliminar.html -->
+<div th:fragment="modalEliminarUsuario">
+  <div class="modal fade" id="modalEliminarUsuario" tabindex="-1" aria-labelledby="modalEliminarUsuarioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title fw-bold">❌ Eliminar Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <form id="formEliminarUsuario" method="post" action="/usuarios/eliminar">
+          <div class="modal-body">
+            <input type="hidden" name="id_usuario" id="del_id_usuario">
+
+            <div class="row g-3">
+              <!-- Trabajador -->
+              <div class="col-lg-12">
+                <label class="form-label">Trabajador</label>
+                <select class="form-select" id="del_id_trabajador" disabled style="background-color: #e9ecef;">
+                  <option value="">Seleccione...</option>
+                  <option th:each="t : ${lstTrabajador}" th:value="${t.id_trabajador}" 
+                          th:text="${t.nombres + ' ' + t.apellidos}">
+                  </option>
+                </select>
+              </div>
+
+              <!-- Rol -->
+              <div class="col-md-6">
+                <label class="form-label">Rol del usuario:</label>
+                <select class="form-select" id="del_id_rol" disabled style="background-color: #e9ecef;">
+                  <option value="">Seleccione...</option>
+                  <option th:each="r : ${lstRol}" th:value="${r.id_rol}" th:text="${r.descripcion}">
+                  </option>
+                </select>
+              </div>
+
+              <!-- Usuario -->
+              <div class="col-md-6">
+                <label class="form-label">Nombre Usuario:</label>
+                <input type="text" class="form-control" id="del_username" disabled>
+              </div>
+
+              <!-- Contraseña -->
+              <div class="col-md-6">
+                <label class="form-label">Contraseña:</label>
+                <input type="text" class="form-control" id="del_contrasenia" disabled>
+              </div>
+
+              <!-- Estado -->
+              <div class="col-12">
+                <label class="form-label">Estado</label>
+                <select class="form-select" id="del_estado" disabled>
+                  <option value="">Seleccione...</option>
+                  <option value="true">Activo</option>
+                  <option value="false">Eliminado</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-danger">ELIMINAR</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script th:inline="javascript" th:if="${mensaje != null}">
+    Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: '[[${mensaje}]]',
+        background: '#f0f9ff',
+        color: '#333',
+        confirmButtonColor: '#4f46e5',
+        confirmButtonText: '¡Entendido!',
+        showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+        },
+        timer: 3500,
+        timerProgressBar: true,
+        allowOutsideClick: false,
+    });
+</script>

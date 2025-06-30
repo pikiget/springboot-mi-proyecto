@@ -1,0 +1,48 @@
+<!DOCTYPE html> 
+<html xmlns:th="http://www.thymeleaf.org"> 
+<body> 
+    <aside th:fragment="navbar(usuarioLogueado)" class="sidebar"> 
+        <div class="sidebar-header"> 
+            <i class="fas fa-briefcase"></i> Workly 
+        </div> 
+        <div class="sidebar-divider"></div> 
+        <ul class="sidebar-menu"> 
+            <li class="menu-item"> 
+                <a class="menu-link" href="/usuarios/cargarMenu"> 
+                    <i class="fas fa-home"></i> Inicio 
+                </a> 
+            </li> 
+            <li class="menu-item" th:if="${usuarioLogueado.id_rol == 1}"> 
+                <a class="menu-link" href="/usuarios/cargarUsuario"> 
+                    <i class="fas fa-users"></i> Usuarios 
+                </a> 
+            </li> 
+            <li class="menu-item" th:if="${usuarioLogueado.id_rol == 1}"> 
+                <a class="menu-link" href="/trabajadores/cargarTrabajador"> 
+                    <i class="fas fa-hard-hat"></i> Trabajadores 
+                </a> 
+            </li> 
+            <li class="menu-item" th:if="${usuarioLogueado.id_rol == 1}"> 
+                <a class="menu-link" href="/horarios/cargarHorario"> 
+                    <i class="fas fa-clock"></i> Horario 
+                </a> 
+            </li> 
+            <li class="menu-item" th:if="${usuarioLogueado.id_rol == 1}"> 
+                <a class="menu-link" href="/asistencias/cargarReporte"> 
+                    <i class="fas fa-clipboard-list"></i> Reporte de Marcaciones 
+                </a> 
+            </li> 
+        </ul> 
+
+        <div class="sidebar-footer"> 
+            <div class="user-info"> 
+                <span>Bienvenido</span> 
+                <span class="username" th:text="${usuarioLogueado.username}">Carlos Rodríguez</span> 
+            </div> 
+            <a class="logout-link" href="/usuarios/logout"> 
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión 
+            </a> 
+        </div> 
+    </aside> 
+</body> 
+</html>

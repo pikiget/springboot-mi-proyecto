@@ -1,0 +1,74 @@
+<!-- templates/modelHorario/modalEditar.html -->
+<div th:fragment="modalEditarHorario">
+	<div class="modal fade" id="modalEditarHorario" tabindex="-1" aria-labelledby="modalEditarHorarioLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header bg-primary text-white">
+					<h5 class="modal-title fw-bold">✏️ Editar Horario</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+
+				<form method="post" action="/horarios/actualizar">
+					<div class="modal-body">
+						<!-- Campo oculto para ID -->
+						<input type="hidden" name="id_horario" id="edit_id_horario" />
+
+						<div class="row g-3">
+							<div class="col-md-6">
+								<label class="form-label">Descripción</label>
+								<input type="text" name="descripcion" id="edit_descripcion" class="form-control"
+									required />
+							</div>
+
+							<div class="col-md-3">
+								<label class="form-label">Hora Inicio</label>
+								<input type="time" name="hora_inicio" id="edit_hora_inicio" class="form-control"
+									required />
+							</div>
+
+							<div class="col-md-3">
+								<label class="form-label">Hora Fin</label>
+								<input type="time" name="hora_fin" id="edit_hora_fin" class="form-control" required />
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label">Tolerancia Ingreso (min)</label>
+								<input type="number" name="tolerancia_ingreso" id="edit_tolerancia_ingreso"
+									class="form-control" required />
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label">Tolerancia Salida (min)</label>
+								<input type="number" name="tolerancia_salida" id="edit_tolerancia_salida"
+									class="form-control" required />
+							</div>
+
+							<!-- Estado -->
+							<div class="col-12">
+								<label class="form-label">Estado</label>
+
+								<!-- Campo oculto que se envía al backend -->
+								<input type="hidden" name="estado" id="hidden_estado_horario">
+
+								<!-- Campo visual que el usuario ve (solo se habilita si está inactivo) -->
+								<select class="form-select" id="edit_estado_horario_visual" disabled>
+									<option value="">Seleccione...</option>
+									<option value="true">Activo</option>
+									<option value="false">Inactivo</option>
+								</select>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+						<button type="submit" class="btn btn-primary">Actualizar</button>
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+</div>
